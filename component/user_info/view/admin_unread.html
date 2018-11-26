@@ -1,0 +1,152 @@
+<!doctype html>
+<html>
+<head>
+    <include file="public/head"/>
+    <title>ThinkCMF插件演示首页</title>
+    <meta name="description" content="ThinkCMF插件演示首页">
+    <meta name="keywords" content="ThinkCMF插件演示首页">
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li><a href="{:cmf_plugin_url('userInfo://AdminIndex/index')}">信息列表</a></li>
+        <li class="active">
+            <a href="javascript:;">未读消息
+                <if condition="($unreadcount != 0)">
+                    <span style="position: absolute; left: -5px; top: -5px; background-color: #ff3738" class="badge">{$unreadcount}</span>
+                </if>
+            </a>
+        </li>
+    </ul>
+
+    <form class="well form-inline margin-top-20" method="post" action="{:cmf_plugin_url('userInfo://AdminIndex/cancelUnread')}">
+        <input id="allread" type="btn" class="btn btn-danger" value="全部标记已读"/>
+    </form>
+
+    <table class="table table-hover table-bordered table-list" >
+        <thead >
+        <tr>
+            <th width="50">ID</th>
+            <th >名字</th>
+            <th width="200">手机</th>
+            <th>公司</th>
+            <th>详细</th>
+            <th>地址</th>
+            <th>状态</th>
+            <th>ip</th>
+            <th width="160">发布日期</th>
+            <th width="90">操作</th>
+        </tr>
+        </thead>
+
+        <foreach name="userinfo" item="vo">
+            <tr>
+                <td><b>{$vo.id}</b></td>
+                <td>{$vo.name|default=''}</td>
+                <td>{$vo.phone|default=''}</td>
+                <td>{$vo.company|default=''}</td>
+                <td>{$vo.description|default=''}</td>
+                <td>{$vo.site|default=''}</td>
+                <td style="text-align: center">
+                    <if condition="($vo['status'] == 1)">
+                        <span style="padding: 2px; background-color: #18BC9C; color: #fff;">已读</span>
+                        <else />
+                        <span style="padding: 2px; background-color: #a2a2a2; color: #fff;">未读</span>
+                    </if>
+                </td>
+                <td>
+                    {$vo.ip|default=''}
+                </td>
+                <td>
+                    {$vo->create_time}
+                </td>
+                <td>
+                    <a href="{:cmf_plugin_url('userInfo://AdminIndex/messageCheck',array('id'=>$vo['id']))}">查看</a>
+                    <a href="{:cmf_plugin_url('userInfo://AdminIndex/delete',array('id'=>$vo['id']))}" class="js-ajax-delete">{:lang('DELETE')}</a>
+                </td>
+            </tr>
+        </foreach>
+    </table>
+    <ul style="float: right" class="pagination">{$page|default=''}</ul>
+</div>
+
+
+
+<include file="public/scripts"/>
+
+<script>
+
+    var readUrl = "{:cmf_plugin_url('userInfo://AdminIndex/cancelUnread')}";
+    function reloadPage(win) {
+        win.location.reload();
+    }
+
+    $(function () {
+        setCookie("refersh_time", 0);
+        Wind.use('ajaxForm', 'artDialog', 'noty', 'iframeTools', function () {
+            $('#allread').click(function () {
+                $.ajax({ url: readUrl, type:"post", dataType:"json",data: {}, success: function(data){
+                        if(data.code !=1){
+                            noty({
+                                text: data.msg,
+                                type: 'error',
+                                layout: 'topCenter',
+                                modal: true,
+                                animation: {
+                                    open: 'animated fadeIn', // Animate.css class names
+                                    close: 'animated fadeOut', // Animate.css class names
+                                },
+                                timeout: 300,
+                                callback: {
+                                    afterClose: function () {
+                                        if (data.url) {
+                                            //返回带跳转地址
+                                            window.location.href = data.url;
+                                        } else {
+                                            if (data.code == 1) {
+                                                //刷新当前页
+                                                reloadPage(window);
+                                            }
+                                        }
+                                    }
+                                }
+                            }).show();
+                            $(window).focus();
+                        }else{
+                            noty({
+                                text: data.msg,
+                                type: 'success',
+                                layout: 'topCenter',
+                                modal: true,
+                                animation: {
+                                    open: 'animated fadeIn', // Animate.css class names
+                                    close: 'animated fadeOut', // Animate.css class names
+                                },
+                                timeout: 300,
+                                callback: {
+                                    afterClose: function () {
+                                        if (data.url) {
+                                            //返回带跳转地址
+                                            window.location.href = data.url;
+                                        } else {
+                                            if (data.code == 1) {
+                                                //刷新当前页
+                                                reloadPage(window);
+                                            }
+                                        }
+                                    }
+                                }
+                            }).show();
+                            $(window).focus();
+                        }
+                    }});
+            })
+        });
+    });
+
+
+
+</script>
+
+</body>
+</html>

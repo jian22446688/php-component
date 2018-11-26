@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+<head>
+    <include file="public/head"/>
+    <title>ThinkCMF插件演示首页</title>
+    <meta name="description" content="ThinkCMF插件演示首页">
+    <meta name="keywords" content="ThinkCMF插件演示首页">
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li><a href="{:cmf_plugin_url('userInfo://AdminIndex/index')}">信息列表</a></li>
+        <li>
+            <a href="{:cmf_plugin_url('userInfo://AdminIndex/unread')}">未读消息
+                <if condition="($unreadcount != 0)">
+                    <span style="position: absolute; left: -5px; top: -5px; background-color: #ff3738" class="badge">{$unreadcount}</span>
+                </if>
+            </a>
+        </li>
+        <li class="active"><a href="javascript:;">查看详情</a></li>
+    </ul>
+    <div class="well  margin-top-20">
+        内容详情
+    </div>
+
+    <div class="row">
+        <div class="col-md-9">
+            <table class="table table-bordered">
+                <tr>
+                    <th width="80">名字</th>
+                    <td>
+                        <p>{$info['name']|default=''}</p>
+                    </td>
+                </tr>
+                <tr>
+                    <th>状态</th>
+                    <td>
+                        <if condition="($info['status'] == 1)">
+                            <span style="padding: 2px; background-color: #18BC9C; color: #fff;">已读</span>
+                            <else />
+                            <span style="padding: 2px; background-color: #a2a2a2; color: #fff;">未读</span>
+                        </if>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>电话</th>
+                    <td>
+                        <p>{$info['phone']|default=''}</p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>公司</th>
+                    <td>
+                        <p>{$info['company']|default=''}</p>
+                    </td>
+                </tr>
+                <tr>
+                    <th>内容</th>
+                    <td>
+                        <p>{$info['description']|default=''}</p>
+                    </td>
+                </tr>
+                <tr>
+                    <th>ip地址</th>
+                    <td>
+                        <p>{$info['ip']|default=''}</p>
+                    </td>
+                </tr>
+                <tr>
+                    <th>提交时间</th>
+                    <td>
+                        <p>{$info['create_time']|default=''}</p>
+                    </td>
+                </tr>
+
+            </table>
+            <div class="form-group">
+                <div class="col-sm-offset-1 col-sm-10">
+                    <a class="btn btn-default" href="{:cmf_plugin_url('userInfo://AdminIndex/index')}">{:lang('BACK')}</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+<include file="public/scripts"/>
+
+<script>
+
+</script>
+
+</body>
+</html>

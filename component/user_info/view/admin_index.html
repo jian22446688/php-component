@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+<head>
+    <include file="public/head"/>
+    <title>用户信息中心</title>
+    <meta name="description" content="ThinkCMF插件演示首页">
+    <meta name="keywords" content="ThinkCMF插件演示首页">
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li class="active"><a>信息列表</a></li>
+        <li>
+            <a href="{:cmf_plugin_url('userInfo://AdminIndex/unread')}">未读消息
+                <if condition="($unreadcount != 0)">
+                    <span style="position: absolute; left: -5px; top: -5px; background-color: #ff3738" class="badge">{$unreadcount}</span>
+                </if>
+            </a>
+        </li>
+    </ul>
+    <form class="well form-inline margin-top-20" method="post" action="{:cmf_plugin_url('userInfo://AdminIndex/downloadexcel')}">
+        文件名:
+        <input type="text" class="form-control" name="excelname" style="width: 200px;"
+               value="" required placeholder="请输入文件名...">
+        <button type="submit" class="btn btn-primary">下载数据表</button>
+    </form>
+    <table class="table table-hover table-bordered table-list" >
+        <thead >
+        <tr>
+            <th width="50">ID</th>
+            <th >名字</th>
+            <th width="200">手机</th>
+            <th>公司</th>
+            <th>详细</th>
+            <th>地址</th>
+            <th>状态</th>
+            <th>ip</th>
+            <th width="160">发布日期</th>
+            <th width="90">操作</th>
+        </tr>
+        </thead>
+
+        <foreach name="userinfo" item="vo">
+            <tr>
+                <td><b>{$vo.id}</b></td>
+                <td>{$vo.name|default=''}</td>
+                <td>{$vo.phone|default=''}</td>
+                <td>{$vo.company|default=''}</td>
+                <td>{$vo.description|default=''}</td>
+                <td>{$vo.site|default=''}</td>
+                <td style="text-align: center">
+                    <if condition="($vo['status'] == 1)">
+                        <span style="padding: 2px; background-color: #18BC9C; color: #fff;">已读</span>
+                        <else />
+                        <span style="padding: 2px; background-color: #a2a2a2; color: #fff;">未读</span>
+                    </if>
+                </td>
+                <td>
+                    {$vo.ip|default=''}
+                </td>
+                <td>
+                    {$vo->create_time}
+                </td>
+                <td>
+                    <a href="{:cmf_plugin_url('userInfo://AdminIndex/messageCheck',array('id'=>$vo['id']))}">查看</a>
+                    <a href="{:cmf_plugin_url('userInfo://AdminIndex/delete',array('id'=>$vo['id']))}" class="js-ajax-delete">{:lang('DELETE')}</a>
+                </td>
+            </tr>
+        </foreach>
+    </table>
+    <ul style="float: right" class="pagination">{$page|default=''}</ul>
+</div>
+<include file="public/scripts"/>
+<script>
+</script>
+</body>
+</html>
